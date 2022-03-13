@@ -1,17 +1,14 @@
-import { getDatabase, ref, set, remove, onValue } from "firebase/database";
+import { getDatabase, ref, set, onValue, child, get } from "firebase/database";
 import db from "../firebase";
 
 import type { ListItem } from "../models/list-item.model";
 
-export function readData() {
-  const db = getDatabase();
-  const items = ref(db, "listitems/");
-  onValue(items, (snapshot) => {
-    const data = snapshot.val();
-    console.log("Async call to DB by DataService finished, loaded data:");
-    console.log(data);
-    return data;
-  });
+export async function readData() {
+  const db = ref(getDatabase());
+  const snapshot = await get(child(db, "listitems"));
+  if (snapshot.exists()) {
+    return snapshot.val();
+  }
 }
 
 export function writeData(item: ListItem) {

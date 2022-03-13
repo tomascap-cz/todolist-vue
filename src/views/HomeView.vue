@@ -18,20 +18,13 @@ function handleFormSubmit(newItem: ListItem): void {
   console.log(newItem);
 }
 
-async function loadData() {
+onMounted(async () => {
   const data = await readData();
-  console.log("Data coming from DataService:");
-  console.log(data);
-}
-
-onMounted(() => {
-  loadData().then((data) => {
-    if (data) {
-      for (let item in data) {
-        store.dispatch("addToList", { ...item });
-      }
+  if (data) {
+    for (let item of Object.values(data)) {
+      store.dispatch("addToList", { ...item });
     }
-  });
+  }
 });
 </script>
 
